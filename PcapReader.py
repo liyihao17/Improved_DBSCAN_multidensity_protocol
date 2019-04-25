@@ -1,4 +1,5 @@
 from netzob.all import *
+import copy
 
 def ImportMessage():
     """
@@ -15,7 +16,7 @@ def ImportMessage():
     #将pcap包中的内容转换为二维列表
     message_list_original = symbol.getValues()
 
-    message_list_tmp = message_list_original[:]
+    message_list_tmp = copy.deepcopy(message_list_original)
     for i in range(len(message_list_tmp)):
         if b'\r' in message_list_tmp[i]:
             message_list_tmp[i] = message_list_tmp[i].replace(b'\r',b'')

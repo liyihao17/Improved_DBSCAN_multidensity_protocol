@@ -65,9 +65,10 @@ def CalculateDistMatrix(dataset):
 
 def returnEpsCandidate(dataSet,threshold):
     """
-    计算Eps候选列表
+    返回Eps候选列表
     :param dataSet: 数据集
-    :return: eps候选集合
+    :param threshold: 阈值
+    :return: Eps侯选高于阈值后不再进行计算
     """
     global OriginalDistMatrix
     DistMatrix = CalculateDistMatrix(dataSet)

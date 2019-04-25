@@ -103,27 +103,31 @@ def main():
     dataSet = DataPretreatment.D1
     eps = DataPretreatment.EpsCandidate
     # print(dataSet)
-    clustering, clusterNum = dbscan(dataSet[1], eps[1])
-    print("cluster Numbers = ", clusterNum)
+    ClusterNumberList = []
+    for i in range(len(eps)):
+        clustering, clusterNum = dbscan(dataSet[i], eps[i])
+        ClusterNumberList.append(clusterNum)
+    print(clusterNum)
+    # print("cluster Numbers = ", clusterNum)
     # print(clusters)
-    result = [[] for i in range(clusterNum + 2)]
-    print(result)
-    for i in range(len(clustering)):
-        if clustering[i] == -1:
-            result[clusterNum + 1].append(dataSet[0][i])
-        else:
-            result[clustering[i]].append(dataSet[0][i])
-
-    for i in range(len(result)):
-        for j in range(len(result[i])):
-            result[i][j].pop()
-            while result[i][j][-1] == -1 :
-                result[i][j].pop()
-
-    for i in range(len(result)):
-        for j in range(len(result[i])):
-            print(bytes(result[i][j]))
-        print("")
+    # result = [[] for i in range(clusterNum + 2)]
+    # print(result)
+    # for i in range(len(clustering)):
+    #     if clustering[i] == -1:
+    #         result[clusterNum + 1].append(dataSet[5][i])
+    #     else:
+    #         result[clustering[i]].append(dataSet[5][i])
+    #
+    # for i in range(len(result)):
+    #     for j in range(len(result[i])):
+    #         result[i][j].pop()
+    #         while result[i][j][-1] == -1 or result[i][j][-1] == 10 or result[i][j][-1] == 13 or result[i][j][-1] == 9:
+    #             result[i][j].pop()
+    #
+    # for i in range(len(result)):
+    #     for j in range(len(result[i])):
+    #         print(bytes(result[i][j]))
+    #     print("")
 
 if __name__ == '__main__':
     start = time.clock()
