@@ -107,7 +107,7 @@ def main():
     for i in range(len(eps)):
         clustering, clusterNum = dbscan(dataSet[i], eps[i])
         ClusterNumberList.append(clusterNum)
-    print(clusterNum)
+    print(ClusterNumberList)
     # print("cluster Numbers = ", clusterNum)
     # print(clusters)
     # result = [[] for i in range(clusterNum + 2)]
