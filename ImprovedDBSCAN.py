@@ -99,16 +99,67 @@ def dbscan(data, eps):
     return clusterResult, clusterId - 1
 
 
+def CalculateSilhouetteCoefficient(result):
+    """
+    计算聚类结果的轮廓系数
+    :param result: 聚类结果
+    :return: 轮廓系数
+    """
+    S = 0
+    num_global = 0
+    for i in range(len(result)):
+        if len(result[i]) == 1:
+            S = S + 0
+            num_global = num_global + 1
+        else:
+            for j in range(len(result[i])):
+                a = 0
+                b = 0
+                num_global = num_global + 1
+                for k in range(len(result[i])):
+                    if j == k:
+                        continue
+                    a = a + LCS.get_lcs_distance(result[i][j],result[i][k])
+                a = a/(len(result[i])-1)
+                num = 0
+                for i_tmp in range(len(result)):
+                    if i == i_tmp:
+                        continue
+                    for j_tmp in range(len(result[i_tmp])):
+                        b = b + LCS.get_lcs_distance(result[i][j],result[i_tmp][j_tmp])
+                        num = num + 1
+                b = b/num
+                S = S + (b - a)/max(a,b)
+    S = S/num_global
+    return S
+
+
+
 def main():
     dataSet = DataPretreatment.D1
     eps = DataPretreatment.EpsCandidate
     # print(dataSet)
-    ClusterNumberList = []
+    ClusterNumberandIndexList = []
     for i in range(len(eps)):
         clustering, clusterNum = dbscan(dataSet[i], eps[i])
-        ClusterNumberList.append(clusterNum)
-    print(ClusterNumberList)
-    # print("cluster Numbers = ", clusterNum)
+        result = [[] for i in range(clusterNum + 2)]
+        for j in range(len(clustering)):
+            if clustering[j] == -1:
+                result[clusterNum + 1].append(dataSet[i][j])
+            else:
+                result[clustering[j]].append(dataSet[i][j])
+
+        for i_1 in range(len(result)):
+            for j_1 in range(len(result[i_1])):
+                result[i_1][j_1].pop()
+                while result[i_1][j_1][-1] == -1 or result[i_1][j_1][-1] == 10 or result[i_1][j_1][-1] == 13 or result[i_1][j_1][-1] == 9:
+                    result[i_1][j_1].pop()
+        ClusterNumberandIndexList.append((clusterNum,CalculateSilhouetteCoefficient(result)))
+        print('cluster number is ' + repr(ClusterNumberandIndexList[i][0]))
+        print('Silhouette Coefficient is ' + repr(ClusterNumberandIndexList[i][1]))
+        print("")
+
+
     # print(clusters)
     # result = [[] for i in range(clusterNum + 2)]
     # print(result)
