@@ -10,7 +10,8 @@ def ImportMessage():
     message_session2 = PCAPImporter.readFile('ftp2.pcap').values()
     message_session3 = PCAPImporter.readFile('ftp3.pcap').values()
     message_session4 = PCAPImporter.readFile('ftp4.pcap').values()
-    message = message_session1 + message_session2 #+ message_session3 + message_session4
+    message = message_session1 + message_session2 + message_session3 + message_session4
+    message = PCAPImporter.readFile('smtp.pcap').values()
     symbol = Symbol(messages=message)
 
     #将pcap包中的内容转换为二维列表
