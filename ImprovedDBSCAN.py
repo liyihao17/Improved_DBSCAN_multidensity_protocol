@@ -114,21 +114,19 @@ def CalculateSilhouetteCoefficient(result):
         else:
             for j in range(len(result[i])):
                 a = 0
-                b = 0
+                b_list = []
                 num_global = num_global + 1
                 for k in range(len(result[i])):
                     if j == k:
                         continue
                     a = a + LCS.get_lcs_distance(result[i][j],result[i][k])
                 a = a/(len(result[i])-1)
-                num = 0
                 for i_tmp in range(len(result)):
                     if i == i_tmp:
                         continue
                     for j_tmp in range(len(result[i_tmp])):
-                        b = b + LCS.get_lcs_distance(result[i][j],result[i_tmp][j_tmp])
-                        num = num + 1
-                b = b/num
+                        b_list.append(LCS.get_lcs_distance(result[i][j],result[i_tmp][j_tmp]))
+                b = min(b_list)
                 S = S + (b - a)/max(a,b)
     S = S/num_global
     return S

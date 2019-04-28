@@ -1,2 +1,2 @@
-a = b'350 Restarting at 0. Send STORE or RETRIEVE to initiate transfer.\r\n\t'
-print(a[-1])
+b_list = [0,1,2,3,4]
+print(min(b_list))
