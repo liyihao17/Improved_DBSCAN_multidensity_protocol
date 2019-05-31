@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(3000)
+
 def lcs_len(a, b):
     '''
     a, b: strings
@@ -57,11 +60,13 @@ def get_lcs_distance(a,b):
     return 1-len(lcs) / max(len(a_new),len(b_new))
 
 if __name__ == "__main__":
-    a = "abcdabf"
-    b = "acdbedbf"
+    # a = "abcdabf"
+    # b = "acdbedbf"
+    a = "abcd"
+    b = "abcd"
     l, direct = lcs_len(a, b)
+    for i in range(len(l)):
+        print(l[i])
     lcs = get_lcs(direct, a, len(a) - 1, len(b) - 1)
     print("the length of lcs is:", l[len(a)][len(b)])
     print("one of the lcs:", "".join(lcs))
-    lcs.append(-1)
-    print(lcs)

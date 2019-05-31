@@ -4,7 +4,10 @@ import time
 import copy
 import DataPretreatment
 import math
+import pickle
+import operator
 
+final_result = None
 UNCLASSIFIED = False
 NOISE = 0
 data_tmp = None
@@ -17,6 +20,8 @@ def dist(a, b):
     """
     a_new = copy.deepcopy(a)
     b_new = copy.deepcopy(b)
+    if operator.eq(a_new,b_new) == True:
+        return 0
     return LCS.get_lcs_distance(a_new,b_new)
 
 def eps_neighbor(a, b, eps):
@@ -131,6 +136,8 @@ def CalculateSilhouetteCoefficient(result):
                 if len(b_list) == 0:
                     return 0
                 b = min(b_list)
+                if max(a,b) == 0:
+                    break
                 S = S + (b - a)/max(a,b)
     S = S/num_global
     return S
@@ -142,6 +149,8 @@ def main():
     eps = DataPretreatment.EpsCandidate
     # print(dataSet)
     ClusterNumberandIndexList = []
+    cluster_result = []
+    f = open('result.txt','w')
     for i in range(len(eps)):
         clustering, clusterNum = dbscan(dataSet[i], eps[i])
         result = [[] for i in range(clusterNum + 2)]
@@ -156,10 +165,53 @@ def main():
                 result[i_1][j_1].pop()
                 while result[i_1][j_1][-1] == -1 or result[i_1][j_1][-1] == 10 or result[i_1][j_1][-1] == 13 or result[i_1][j_1][-1] == 9:
                     result[i_1][j_1].pop()
-        ClusterNumberandIndexList.append((clusterNum,CalculateSilhouetteCoefficient(result)))
+        ClusterNumberandIndexList.append((clusterNum,eps[i]))
         print('cluster number is ' + repr(ClusterNumberandIndexList[i][0]))
-        print('Silhouette Coefficient is ' + repr(ClusterNumberandIndexList[i][1]))
-        print("")
+        # print("SilhouetteCoefficient is " + repr(ClusterNumberandIndexList[i][2]))
+        f.write('cluster number is ' + repr(ClusterNumberandIndexList[i][0]+1))
+        f.write('\n')
+        # print('Silhouette Coefficient is ' + repr(ClusterNumberandIndexList[i][1]))
+        f.write("eps is " + repr(ClusterNumberandIndexList[i][1]))
+        # f.write('\n')
+        # f.write("SilhouetteCoefficient is " + repr(ClusterNumberandIndexList[i][2]))
+        f.write('\n')
+        f.write("the result of cluster is ")
+        f.write('\n')
+        for i_1 in range(len(result)):
+            f.write("")
+            f.write('the number ' + repr(i_1) + ' cluster is \n')
+            for j_1 in range(len(result[i_1])):
+                # f.write(bytes(result[i_1][j_1]))
+                for k_1 in range(len(result[i_1][j_1])):
+                    f.write(chr(result[i_1][j_1][k_1]))
+                f.write('\n')
+            f.write('\n')
+        f.write("\n\n")
+        cluster_result.append(result)
+    f.close()
+
+    global final_result
+    for k in range(len(cluster_result)):
+        file_name = 'result' + str(k) + '.bin'
+        final_result= copy.deepcopy(cluster_result[k])
+        final_result_tmp = copy.deepcopy(final_result)
+        for i in range(len(final_result_tmp)):
+            if len(final_result_tmp[i]) == 0:
+                final_result.remove(final_result_tmp[i])
+        final_result_tmp = copy.deepcopy(final_result)
+        for i in range(len(final_result_tmp)):
+            for j in range(len(final_result_tmp[i])):
+                final_result[i][j] = bytes(final_result_tmp[i][j])
+
+        # print('final cluster result is ')
+        # for i in range(len(final_result)):
+        #     for j in range(len(final_result[i])):
+        #         print(final_result[i][j])
+        #     print('')
+
+        f = open(file_name,'wb')
+        pickle.dump(final_result,f)
+        f.close()
 
 
     # print(clusters)

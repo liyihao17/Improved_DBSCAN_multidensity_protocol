@@ -2,6 +2,7 @@ import PcapReader
 import numpy as np
 import copy
 import LCS
+import time
 
 OriginalDistMatrix = []
 message_list_original,message_list = PcapReader.ImportMessage()
@@ -56,10 +57,14 @@ def CalculateDistMatrix(dataset):
     :param dataset: 数据集
     :return: 距离矩阵
     """
+    start = time.clock()
+    print('DistMatrix are being calculated')
     DistMatrix = [[0 for j in range(len(dataset))] for i in range(len(dataset))]
     for i in range(len(dataset)):
         for j in range(len(dataset)):
             DistMatrix[i][j] = dist(dataset[i], dataset[j])
+    end = time.clock()
+    print('DistMatrix calculating over ' + repr(end - start) + ' seconds')
     return DistMatrix
 
 
@@ -111,7 +116,7 @@ def returnD1(EpsCandidate):
     return D1
 
 
-EpsCandidate = returnEpsCandidate(message_list,0.5) #Eps参数候选列表,全局变量
+EpsCandidate = returnEpsCandidate(message_list,0.75) #Eps参数候选列表,全局变量
 D1 = returnD1(EpsCandidate) #后面接Eps内点数的预处理后的数据集,全局变量
 
 
